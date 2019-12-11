@@ -1,0 +1,27 @@
+{
+  "OutputDirectory": "c:\\temp",
+  "ProjectFile": "",
+  "SqlConnectionString": "Data Source=.;Initial Catalog=Stocks;Integrated Security=True",
+  "SqlTextCommand": "",
+  "AdditionalTokenFind": "",
+  "AdditionalTokenReplace": "",
+  "AdditionalCollapseTokens": "",
+  "BaseNamespace": "Funcular",
+  "EntityNamespace": "Entities",
+  "EntitiesInherit": "",
+  "EntitiesImplementInterfaces": "",
+  "Usings": "",
+  "DataProviderNamespace": "",
+  "GenerateFluentEFMappings": false,
+  "GenerateCrmSpecificProperties": false,
+  "ImplementIdGenerator": false,
+  "UseAutomaticProperties": true,
+  "PrimaryKeyGetsNamedId": false,
+  "GeneratedIdDataType": "",
+  "EntityAttributes": "Serializable",
+  "MappingAttributes": "",
+  "SavedConnectionStrings": [
+    "Data Source=SqlServer;Integrated Security=True",
+    "Data Source=Localhost;Initial Catalog=MyDatabase;Integrated Security=True"
+  ]
+}

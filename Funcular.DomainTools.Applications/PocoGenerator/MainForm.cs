@@ -859,5 +859,10 @@ namespace Funcular.DomainTools.Applications
             TableNameTextBox.Text = null;
             TableFilterChanged(sender,e);
         }
+
+        private void menuItemAssemblies_Click(object sender, EventArgs e)
+        {
+            new AssembliesForm().Show();
+        }
     }
 }

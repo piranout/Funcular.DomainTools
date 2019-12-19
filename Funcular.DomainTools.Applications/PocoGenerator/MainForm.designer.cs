@@ -33,22 +33,20 @@ namespace Funcular.DomainTools.Applications
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
-            Settings settings1 = new Settings();
+            Funcular.DomainTools.Applications.Properties.Settings settings1 = new Funcular.DomainTools.Applications.Properties.Settings();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.menuItemSettings = new System.Windows.Forms.ToolStripDropDownButton();
             this.loadMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.abbreviationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ConnectionStringTextBox = new System.Windows.Forms.TextBox();
-            this.generatorOptionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label1 = new System.Windows.Forms.Label();
-            this.InspectDatabaseButton = new System.Windows.Forms.Button();
             this.OutputDirectoryTextBox = new System.Windows.Forms.TextBox();
             this.OutputDirectoryLabel = new System.Windows.Forms.Label();
             this.ConnectionDialogButton = new System.Windows.Forms.Button();
@@ -77,6 +75,7 @@ namespace Funcular.DomainTools.Applications
             this.SqlCommandTabPage = new System.Windows.Forms.TabPage();
             this.SqlCommandTextBox = new FastColoredTextBoxNS.FastColoredTextBox();
             this.SchemaTableTabPage = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.InspectSqlCommandButton = new System.Windows.Forms.Button();
             this.GenerateFromSqlCommandButton = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -85,13 +84,14 @@ namespace Funcular.DomainTools.Applications
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.ProgressStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.menuItemAssemblies = new System.Windows.Forms.ToolStripButton();
+            this.generatorOptionsBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.InspectDatabaseButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.generatorOptionsBindingSource)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -101,8 +101,9 @@ namespace Funcular.DomainTools.Applications
             this.tabControl1.SuspendLayout();
             this.SqlCommandTabPage.SuspendLayout();
             this.SchemaTableTabPage.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.generatorOptionsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -142,7 +143,8 @@ namespace Funcular.DomainTools.Applications
             this.toolStrip1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.toolStrip1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripDropDownButton1});
+            this.menuItemSettings,
+            this.menuItemAssemblies});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -150,18 +152,18 @@ namespace Funcular.DomainTools.Applications
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripDropDownButton1
+            // menuItemSettings
             // 
-            this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuItemSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.loadMenuItem,
             this.editMenuItem,
             this.saveMenuItem,
             this.saveAsMenuItem,
             this.abbreviationsToolStripMenuItem});
-            this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(67, 22);
-            this.toolStripDropDownButton1.Text = "&Settings";
+            this.menuItemSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuItemSettings.Name = "menuItemSettings";
+            this.menuItemSettings.Size = new System.Drawing.Size(67, 22);
+            this.menuItemSettings.Text = "&Settings";
             // 
             // loadMenuItem
             // 
@@ -234,10 +236,6 @@ namespace Funcular.DomainTools.Applications
             settings1.Usings = "";
             this.ConnectionStringTextBox.Text = settings1.SqlConnectionString;
             // 
-            // generatorOptionsBindingSource
-            // 
-            this.generatorOptionsBindingSource.DataSource = typeof(GeneratorOptions);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -247,23 +245,6 @@ namespace Funcular.DomainTools.Applications
             this.label1.Size = new System.Drawing.Size(127, 20);
             this.label1.TabIndex = 4;
             this.label1.Text = "Connection String";
-            // 
-            // InspectDatabaseButton
-            // 
-            this.InspectDatabaseButton.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.InspectDatabaseButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.InspectDatabaseButton.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InspectDatabaseButton.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.InspectDatabaseButton.Image = global::Funcular.DomainTools.Applications.Properties.Resources.search;
-            this.InspectDatabaseButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.InspectDatabaseButton.Location = new System.Drawing.Point(965, 99);
-            this.InspectDatabaseButton.Name = "InspectDatabaseButton";
-            this.InspectDatabaseButton.Size = new System.Drawing.Size(131, 33);
-            this.InspectDatabaseButton.TabIndex = 7;
-            this.InspectDatabaseButton.Text = "Inspect DB";
-            this.InspectDatabaseButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.InspectDatabaseButton.UseVisualStyleBackColor = true;
-            this.InspectDatabaseButton.Click += new System.EventHandler(this.InspectDatabaseButton_Click);
             // 
             // OutputDirectoryTextBox
             // 
@@ -644,6 +625,22 @@ namespace Funcular.DomainTools.Applications
             this.SchemaTableTabPage.Text = "Schema Table";
             this.SchemaTableTabPage.UseVisualStyleBackColor = true;
             // 
+            // dataGridView1
+            // 
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
+            this.dataGridView1.Name = "dataGridView1";
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Candara", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridView1.Size = new System.Drawing.Size(930, 779);
+            this.dataGridView1.TabIndex = 1;
+            // 
             // InspectSqlCommandButton
             // 
             this.InspectSqlCommandButton.FlatAppearance.BorderColor = System.Drawing.Color.Gainsboro;
@@ -716,21 +713,36 @@ namespace Funcular.DomainTools.Applications
             this.ProgressStatusLabel.Text = "Ready";
             this.ProgressStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // dataGridView1
+            // menuItemAssemblies
             // 
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.dataGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
-            this.dataGridView1.Name = "dataGridView1";
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Candara", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridView1.Size = new System.Drawing.Size(930, 776);
-            this.dataGridView1.TabIndex = 1;
+            this.menuItemAssemblies.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuItemAssemblies.Image = ((System.Drawing.Image)(resources.GetObject("menuItemAssemblies.Image")));
+            this.menuItemAssemblies.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.menuItemAssemblies.Name = "menuItemAssemblies";
+            this.menuItemAssemblies.Size = new System.Drawing.Size(77, 22);
+            this.menuItemAssemblies.Text = "Assemblies";
+            this.menuItemAssemblies.Click += new System.EventHandler(this.menuItemAssemblies_Click);
+            // 
+            // generatorOptionsBindingSource
+            // 
+            this.generatorOptionsBindingSource.DataSource = typeof(Funcular.DomainTools.ClassBuilders.GeneratorOptions);
+            // 
+            // InspectDatabaseButton
+            // 
+            this.InspectDatabaseButton.FlatAppearance.MouseOverBackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.InspectDatabaseButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.InspectDatabaseButton.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InspectDatabaseButton.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.InspectDatabaseButton.Image = global::Funcular.DomainTools.Applications.Properties.Resources.search;
+            this.InspectDatabaseButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.InspectDatabaseButton.Location = new System.Drawing.Point(965, 99);
+            this.InspectDatabaseButton.Name = "InspectDatabaseButton";
+            this.InspectDatabaseButton.Size = new System.Drawing.Size(131, 33);
+            this.InspectDatabaseButton.TabIndex = 7;
+            this.InspectDatabaseButton.Text = "Inspect DB";
+            this.InspectDatabaseButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.InspectDatabaseButton.UseVisualStyleBackColor = true;
+            this.InspectDatabaseButton.Click += new System.EventHandler(this.InspectDatabaseButton_Click);
             // 
             // MainForm
             // 
@@ -752,7 +764,6 @@ namespace Funcular.DomainTools.Applications
             this.splitContainer1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.generatorOptionsBindingSource)).EndInit();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel1.PerformLayout();
             this.splitContainer2.Panel2.ResumeLayout(false);
@@ -764,9 +775,10 @@ namespace Funcular.DomainTools.Applications
             this.tabControl1.ResumeLayout(false);
             this.SqlCommandTabPage.ResumeLayout(false);
             this.SchemaTableTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.generatorOptionsBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -789,7 +801,7 @@ namespace Funcular.DomainTools.Applications
 		private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
 		private System.Windows.Forms.ToolStrip toolStrip1;
-		private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
+		private System.Windows.Forms.ToolStripDropDownButton menuItemSettings;
 		private System.Windows.Forms.ToolStripMenuItem editMenuItem;
 		private System.Windows.Forms.ComboBox StoredProceduresDropdown;
 		private System.Windows.Forms.Button GenerateFromStoredProcedureButton;
@@ -823,6 +835,7 @@ namespace Funcular.DomainTools.Applications
         private System.Windows.Forms.Button clearTablesFilterButton;
         private System.Windows.Forms.BindingSource generatorOptionsBindingSource;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.ToolStripButton menuItemAssemblies;
     }
 }
 

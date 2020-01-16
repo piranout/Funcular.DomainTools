@@ -40,6 +40,8 @@ namespace Funcular.DomainTools.ClassBuilders
         public bool PrimaryKeyGetsNamedId { get; set; }
 		public string GeneratedIdDataType { get; set; }
 
+		public bool AddColumnNameAttributes { get; set; }
+
 	    public string EntityAttributes
 	    {
 	        get { return _entityAttributes; }

@@ -22,6 +22,7 @@ namespace Funcular.DomainTools.ClassBuilders
         bool GenerateCrmSpecificProperties { get; set; }
         bool ImplementIdGenerator { get; set; }
         bool UseAutomaticProperties { get; set; }
+        bool AddColumnNameAttributes { get; set; }
         String GeneratedIdDataType { get; set; }
         IEnumerable<SchemaColumnInfo> ColumnInfos { get; set; }
         string Usings { get; set; }

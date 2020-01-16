@@ -261,6 +261,7 @@ namespace Funcular.DomainTools.Applications
         {
             //saveOutputDirectoryAndConnectionString();
             var generatorOptions = _generatorOptions ??/* _config?.AsGeneratorOptions() ??*/(_generatorOptions = new GeneratorOptions());
+            
             generatorOptionsBindingSource.DataSource = generatorOptions;
             // generatorOptions.OutputDirectory = this.OutputDirectoryTextBox.Text;
             // var dataSource = this.dataGridView1.DataSource;

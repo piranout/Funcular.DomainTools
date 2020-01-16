@@ -174,16 +174,20 @@ namespace Funcular.DomainTools.ClassBuilders
             className = className.StripLeft("Select"); // common get prefix
             className = className.StripLeft("Get");  // common get prefix
 
-            EntityBuilder tempQualifier = this._builder.WriteUsingNamespaces()
-                .WriteNamespaceDeclaration(entityNamespace);
+            /*EntityBuilder tempQualifier = this._builder.WriteUsingNamespaces()
+                .WriteNamespaceDeclaration(entityNamespace);*/
             _builder.WriteUsingNamespaces()
                 .WriteNamespaceDeclaration(entityNamespace)
-                .WriteClassDeclaration(className: className, inherits: _options.EntitiesInherit, implementsInterfaces: _options.EntitiesImplementInterfaces, classAttributes: _options.EntityAttributes);
+                .WriteClassDeclaration(className: className, inherits: _options.EntitiesInherit, implementsInterfaces: _options.EntitiesImplementInterfaces, classAttributes: _options.EntityAttributes, tableName: procedureName);
             foreach (var col in GetProcedureColumns(fullyQualifiedProcedureName))
             {
                 string propertyName = col.ColumnName;
                 string propertyType = col.DataType.Name;
                 bool useNullableType = (col.AllowDBNull && col.DataType.IsValueType);
+                if (_options.AddColumnNameAttributes)
+                {
+                    _builder.WriteLine($"[Column(\"{col.ColumnName}\")]");
+                }
                 _builder.WriteProperty(propertyName, propertyType, useNullableType, _options.UseAutomaticProperties);
             }
             _builder.WriteLine("}")
@@ -218,7 +222,7 @@ namespace Funcular.DomainTools.ClassBuilders
 
             _builder.WriteUsingNamespaces()
                 .WriteNamespaceDeclaration(entityNamespace)
-                .WriteClassDeclaration(className, _options.EntitiesInherit, _options.EntitiesImplementInterfaces, _options.EntityAttributes);
+                .WriteClassDeclaration(className, _options.EntitiesInherit, _options.EntitiesImplementInterfaces, _options.EntityAttributes, tableName: tableOrViewName);
 
             foreach (var col in GetTextCommandColumns(textCommand))
             {
@@ -280,7 +284,8 @@ namespace Funcular.DomainTools.ClassBuilders
                     implementsInterfaces: _options.EntitiesImplementInterfaces, 
                     classAttributes: _options.EntityAttributes, 
                     additionalFind: _options.AdditionalTokenFind, 
-                    additionalReplace: _options.AdditionalTokenReplace);
+                    additionalReplace: _options.AdditionalTokenReplace,
+                    tableName: tableName);
            
 
             //List<SchemaColumnInfo> columnInfos = getTableColumns(fullyQualifiedTableName);
@@ -288,6 +293,7 @@ namespace Funcular.DomainTools.ClassBuilders
             {
                 string propertyName = col.PropertyName; //col.ColumnName;
                 string propertyType = col.DataType.Name;
+                string columnName = col.ColumnName ?? col.BaseColumnName;
                 bool useNullableType = (col.AllowDBNull && col.DataType.IsValueType);
                 string newPropertyName = propertyName != col.ColumnName
                     ? propertyName
@@ -308,6 +314,10 @@ namespace Funcular.DomainTools.ClassBuilders
 
                 }
                 _builder.ColumnNameNewNameMappings[col.ColumnName] = newPropertyName;
+                if (_options.AddColumnNameAttributes)
+                {
+                    _builder.WriteLine($"[Column(\"{columnName}\")]");
+                }
                 _builder.WriteProperty(newPropertyName, propertyType, useNullableType, _options.UseAutomaticProperties);
             }
             if (_options.GenerateCrmSpecificProperties && !className.EndsWith("ExtensionBase"))

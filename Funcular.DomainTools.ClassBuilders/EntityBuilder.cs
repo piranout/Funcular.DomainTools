@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Funcular.DomainTools.Utilities;
+using IQToolkit;
 
 #endregion
 
@@ -73,7 +74,7 @@ namespace Funcular.DomainTools.ClassBuilders
 			return this;
 		}
 
-		public EntityBuilder WriteClassDeclaration(string className, string inherits, string implementsInterfaces, string classAttributes, string additionalFind = null, string additionalReplace = null)
+		public EntityBuilder WriteClassDeclaration(string className, string inherits, string implementsInterfaces, string classAttributes, string additionalFind = null, string additionalReplace = null, string tableName = null)
 		{
 		    string implementsSeparator = 
 				inherits.HasValue() && implementsInterfaces.HasValue() ? ", " : "";
@@ -94,7 +95,7 @@ namespace Funcular.DomainTools.ClassBuilders
 			    this._classNameNewNameMappings[className] = newClassName;
 					className = newClassName;
 			}
-		    WriteClassAttributes(classAttributes);
+		    WriteClassAttributes(classAttributes, tableName);
 			WriteLine(
 				"public partial class {0} {1}",
 				className,
@@ -103,9 +104,13 @@ namespace Funcular.DomainTools.ClassBuilders
 			return this;
 		}
 
-	    private void WriteClassAttributes(string entityAttributes)
+	    private void WriteClassAttributes(string entityAttributes, string tableName)
 	    {
-	        if (string.IsNullOrWhiteSpace(entityAttributes))
+            if (_options.AddColumnNameAttributes)
+            {
+                WriteLine($"[Table(\"{tableName}\")]");
+            }
+			if (string.IsNullOrWhiteSpace(entityAttributes))
 	            return;
 	        var originalIndentLevel = _indentLevel;
 	        _indentLevel = 1;
@@ -138,7 +143,12 @@ namespace Funcular.DomainTools.ClassBuilders
 		public EntityBuilder WriteUsingNamespaces()
 		{
 			_indentLevel = 0;
-			foreach (string item in _includeNamespaces)
+            if (_options.AddColumnNameAttributes && !_includeNamespaces.Contains("System.ComponentModel.DataAnnotations.Schema", StringComparer.OrdinalIgnoreCase))
+            {
+				_includeNamespaces.Add("System.ComponentModel.DataAnnotations.Schema");
+            }
+			_includeNamespaces = _includeNamespaces.OrderBy(x => x).ToList();
+            foreach (string item in _includeNamespaces.Distinct())
 			{
 				WriteLine("using {0};", item);
 			}

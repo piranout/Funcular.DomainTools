@@ -7,62 +7,27 @@ namespace Funcular.DomainTools.ClassBuilders
     {
         #region Nonpublic fields
 
-        private ICollection<ForeignKey> _foreignKeys;
-
-        private readonly ICollection<SchemaColumnInfo> _schemaColumns;
-
-        private string _entityNamespace;
-        private SchemaColumnInfo _primaryKeyColumn;
-        private string _innerNamespace;
-        private string _unqualifiedTableName;
-        private string _className;
-
         #endregion
 
         public ClassConfiguration(ICollection<SchemaColumnInfo> schemaColumns)
         {
-            _schemaColumns = schemaColumns;
+            SchemaColumns = schemaColumns;
         }
 
-        public string ClassName
-        {
-            get { return _className; }
-            set { _className = value; }
-        }
+        public string ClassName { get; set; }
 
-        public string EntityNamespace
-        {
-            get { return _entityNamespace; }
-            set { _entityNamespace = value; }
-        }
+        public string EntityNamespace { get; set; }
 
-        public SchemaColumnInfo PrimaryKeyColumn
-        {
-            get { return _primaryKeyColumn; }
-            set { _primaryKeyColumn = value; }
-        }
+        public SchemaColumnInfo PrimaryKeyColumn { get; set; }
 
-        public string InnerNamespace
-        {
-            get { return _innerNamespace; }
-            set { _innerNamespace = value; }
-        }
+        public string InnerNamespace { get; set; }
 
-        public string UnqualifiedTableName
-        {
-            get { return _unqualifiedTableName; }
-            set { _unqualifiedTableName = value; }
-        }
+        public string UnqualifiedTableName { get; set; }
 
-        public ICollection<ForeignKey> ForeignKeys
-        {
-            get { return _foreignKeys; }
-            set { _foreignKeys = value; }
-        }
+        public string EntityOutputDirectory { get; set; }
 
-        public ICollection<SchemaColumnInfo> SchemaColumns
-        {
-            get { return _schemaColumns; }
-        }
+        public ICollection<ForeignKey> ForeignKeys { get; set; }
+
+        public ICollection<SchemaColumnInfo> SchemaColumns { get; }
     }
 }

@@ -690,6 +690,7 @@ namespace Funcular.DomainTools.Applications
                 return;
             try
             {
+                TableNameTextBox.Clear();
                 InvokeDisableForm();
                 var columnInfos = _domainManager.GetTableColumnInfoList(tableName);
                 dataGridView1.DataSource = new BindingList<SchemaColumnInfo>(columnInfos);

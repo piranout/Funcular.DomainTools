@@ -69,7 +69,7 @@ namespace Funcular.DomainTools.ClassBuilders
                     _classGenerator.CreateProcedureClass(commandText, _schemaColumnDictionary[commandText]);
                     break;
                 case CommandType.TableDirect:
-                    _classGenerator.CreateTableClass(commandText, _schemaColumnDictionary[commandText]);
+                    _classGenerator.WriteTableClass(commandText, _schemaColumnDictionary[commandText]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(commandType));

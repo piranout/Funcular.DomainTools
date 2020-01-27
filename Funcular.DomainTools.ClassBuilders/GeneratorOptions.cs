@@ -9,9 +9,8 @@ namespace Funcular.DomainTools.ClassBuilders
 	{
 
 	    private string _outputDirectory;
-	    private string _entityAttributes;
 
-	    public string OutputDirectory
+        public string OutputDirectory
 	    {
 	        get { return ClassGenerator.RemoveInvalidPathCharacters(_outputDirectory); }
 	        set { _outputDirectory = value; }
@@ -30,8 +29,11 @@ namespace Funcular.DomainTools.ClassBuilders
 		public string EntitiesInherit { get; set; }
 		public string EntitiesImplementInterfaces { get; set; }
         public string Usings { get; set; }
+        public bool GenerateInheritingBusinessObjects { get; set; }
+        public bool RemoveDboFromOutputFolderPath { get; set; }
+        public string EntitySuffix { get; set; }
 
-		public string DataProviderNamespace { get; set; }
+        public string DataProviderNamespace { get; set; }
 
 		public bool GenerateFluentEFMappings { get; set; }
 		public bool GenerateCrmSpecificProperties { get; set; }
@@ -40,15 +42,11 @@ namespace Funcular.DomainTools.ClassBuilders
         public bool PrimaryKeyGetsNamedId { get; set; }
 		public string GeneratedIdDataType { get; set; }
 
-		public bool AddColumnNameAttributes { get; set; }
+		public bool AddDataAnnotationAttributes { get; set; }
 
-	    public string EntityAttributes
-	    {
-	        get { return _entityAttributes; }
-	        set { _entityAttributes = value; }
-	    }
+	    public string EntityAttributes { get; set; }
 
-	    public string MappingAttributes{ get; set; }
+        public string MappingAttributes{ get; set; }
         [Obsolete("These are on a per-entity basis now, not a single collection for the whole project.",false)]
         public IEnumerable<SchemaColumnInfo> ColumnInfos
         {

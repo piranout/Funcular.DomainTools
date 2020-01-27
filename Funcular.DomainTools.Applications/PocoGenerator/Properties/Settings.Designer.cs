@@ -321,5 +321,41 @@ namespace Funcular.DomainTools.Applications.Properties {
                 this["AddColumnNameAttributes"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool GenerateInheritingBusinessObjects {
+            get {
+                return ((bool)(this["GenerateInheritingBusinessObjects"]));
+            }
+            set {
+                this["GenerateInheritingBusinessObjects"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool RemoveDboFromOutputFolderPath {
+            get {
+                return ((bool)(this["RemoveDboFromOutputFolderPath"]));
+            }
+            set {
+                this["RemoveDboFromOutputFolderPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Entity")]
+        public string EntitySuffix {
+            get {
+                return ((string)(this["EntitySuffix"]));
+            }
+            set {
+                this["EntitySuffix"] = value;
+            }
+        }
     }
 }

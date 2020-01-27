@@ -106,7 +106,7 @@ namespace Funcular.DomainTools.ClassBuilders
 
 	    private void WriteClassAttributes(string entityAttributes, string tableName)
 	    {
-            if (_options.AddColumnNameAttributes)
+            if (_options.AddDataAnnotationAttributes)
             {
                 WriteLine($"[Table(\"{tableName}\")]");
             }
@@ -143,7 +143,7 @@ namespace Funcular.DomainTools.ClassBuilders
 		public EntityBuilder WriteUsingNamespaces()
 		{
 			_indentLevel = 0;
-            if (_options.AddColumnNameAttributes && !_includeNamespaces.Contains("System.ComponentModel.DataAnnotations.Schema", StringComparer.OrdinalIgnoreCase))
+            if (_options.AddDataAnnotationAttributes && !_includeNamespaces.Contains("System.ComponentModel.DataAnnotations.Schema", StringComparer.OrdinalIgnoreCase))
             {
 				_includeNamespaces.Add("System.ComponentModel.DataAnnotations.Schema");
             }

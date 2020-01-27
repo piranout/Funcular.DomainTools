@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -101,7 +102,7 @@ namespace Funcular.DomainTools.Utilities.FastReflection
             Func<object> constructor;
             var intPtr = typeof(TInstance).TypeHandle.Value;
             if (!_constructorCache.TryGetValue(intPtr, out constructor))
-                _constructorCache.Add(intPtr, constructor = EmitHelper.CreateParameterlessConstructorHandler(typeof(TInstance)));
+                _constructorCache[intPtr] = EmitHelper.CreateParameterlessConstructorHandler(typeof(TInstance));
             return (TInstance) constructor();
         }
 
@@ -112,7 +113,13 @@ namespace Funcular.DomainTools.Utilities.FastReflection
                 var key = propertyInfo.GetGetMethod().MethodHandle.Value;
                 Func<object, object> getter;
                 if (!_getterCache.TryGetValue(key, out getter))
-                    _getterCache.Add(key, getter = EmitHelper.CreatePropertyGetterHandler(propertyInfo));
+                    {
+                        getter = EmitHelper.CreatePropertyGetterHandler(propertyInfo);
+                        _getterCache[key] = getter;
+                    }
+
+                if (getter == null)
+                    return default(TMember);
                 return (TMember)getter(instance);
             }
             throw new NotImplementedException();
@@ -126,7 +133,7 @@ namespace Funcular.DomainTools.Utilities.FastReflection
                 var fieldInfo = info;
                 Func<object, object> getter;
                 if (!_getterCache.TryGetValue(fieldInfo.FieldHandle.Value, out getter))
-                    _getterCache.Add(fieldInfo.FieldHandle.Value, getter = EmitHelper.CreateFieldGetterHandler(fieldInfo));
+                    _getterCache[fieldInfo.FieldHandle.Value] = EmitHelper.CreateFieldGetterHandler(fieldInfo);
                 return (TMember) getter(instance);
             }
             else
@@ -141,7 +148,13 @@ namespace Funcular.DomainTools.Utilities.FastReflection
             var key = propertyInfo.GetSetMethod().MethodHandle.Value;
             Action<object, object> setter;
             if (!_setterCache.TryGetValue(key, out setter))
-                _setterCache.Add(key, setter = EmitHelper.CreatePropertySetterHandler(propertyInfo));
+            {
+                setter = EmitHelper.CreatePropertySetterHandler(propertyInfo);
+                _setterCache[key] = setter;
+            }
+
+            if (setter == null)
+                return value as TMember;
             if (value is DBNull)
             {
                 // If you are getting exceptions here, someone probably used a 
@@ -165,7 +178,7 @@ namespace Funcular.DomainTools.Utilities.FastReflection
             {
                 Action<object, object> setter;
                 if (!_setterCache.TryGetValue(fieldInfo.FieldHandle.Value, out setter))
-                    _setterCache.Add(fieldInfo.FieldHandle.Value, setter = EmitHelper.CreateFieldSetterHandler(fieldInfo));
+                    _setterCache[fieldInfo.FieldHandle.Value] = EmitHelper.CreateFieldSetterHandler(fieldInfo);
                 setter(instance, value);
                 return value;
             }

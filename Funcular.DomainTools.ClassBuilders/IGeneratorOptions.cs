@@ -22,9 +22,14 @@ namespace Funcular.DomainTools.ClassBuilders
         bool GenerateCrmSpecificProperties { get; set; }
         bool ImplementIdGenerator { get; set; }
         bool UseAutomaticProperties { get; set; }
-        bool AddColumnNameAttributes { get; set; }
+        bool AddDataAnnotationAttributes { get; set; }
         String GeneratedIdDataType { get; set; }
         IEnumerable<SchemaColumnInfo> ColumnInfos { get; set; }
         string Usings { get; set; }
+        bool GenerateInheritingBusinessObjects { get; set; }
+        bool RemoveDboFromOutputFolderPath { get; set; }
+        string EntitySuffix { get; set; }
+
+
     }
 }

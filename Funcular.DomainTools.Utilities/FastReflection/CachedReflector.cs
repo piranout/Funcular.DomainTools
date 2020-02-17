@@ -154,7 +154,7 @@ namespace Funcular.DomainTools.Utilities.FastReflection
             }
 
             if (setter == null)
-                return value as TMember;
+                return (TMember) value;
             if (value is DBNull)
             {
                 // If you are getting exceptions here, someone probably used a 

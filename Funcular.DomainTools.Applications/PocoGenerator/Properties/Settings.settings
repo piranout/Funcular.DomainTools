@@ -86,5 +86,14 @@
     <Setting Name="EntitySuffix" Type="System.String" Scope="User">
       <Value Profile="(Default)">Entity</Value>
     </Setting>
+    <Setting Name="EntitiesSubdirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BusinessObjectsSubdirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BusinessObjectsNamespace" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

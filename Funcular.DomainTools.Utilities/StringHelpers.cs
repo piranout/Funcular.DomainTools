@@ -175,6 +175,15 @@ namespace Funcular.DomainTools.Utilities
 			"" :
 			originalString.Substring(idx + ofString.Length, originalString.Length - (idx + ofString.Length)));
 		}
+        public static string LeftOfLast(this string originalString, string ofString)
+        {
+            if (string.IsNullOrEmpty(originalString))
+                return originalString;
+            int idx = originalString.LastIndexOf(ofString, System.StringComparison.Ordinal);
+            return (idx < 0 ?
+                "" :
+                originalString.Substring(0, idx + 1));
+        }
 		public static string RightOfFirst(this string originalString, string ofString)
 		{
 			if (string.IsNullOrEmpty(originalString))

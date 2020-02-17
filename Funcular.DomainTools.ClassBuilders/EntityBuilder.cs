@@ -74,11 +74,11 @@ namespace Funcular.DomainTools.ClassBuilders
 			return this;
 		}
 
-		public EntityBuilder WriteClassDeclaration(string className, string inherits, string implementsInterfaces, string classAttributes, string additionalFind = null, string additionalReplace = null, string tableName = null)
+		public EntityBuilder WriteClassDeclaration(string className, string inherits, string implementsInterfaces, string classAttributes, string additionalFind = null, string additionalReplace = null, string tableName = null, bool applyDataAnnotationAttributes = true)
 		{
 		    string implementsSeparator = 
 				inherits.HasValue() && implementsInterfaces.HasValue() ? ", " : "";
-			var inheritanceString = inherits.HasValue(nonWhitespaceOnly: true) ? inherits : " ";
+			var inheritanceString = inherits.HasValue(nonWhitespaceOnly: true) ? inherits.Replace("dbo.", "") : " ";
 			if (implementsInterfaces.HasValue())
 			{
 				implementsInterfaces = replaceTokens(implementsInterfaces, className, additionalFind, additionalReplace);
@@ -86,7 +86,7 @@ namespace Funcular.DomainTools.ClassBuilders
 			}
 			if (this._options.GenerateCrmSpecificProperties)
 			{
-				
+			
 					inheritanceString = inheritanceString.Replace("new_", "");
 					string newClassName;
 			    newClassName = 
@@ -95,7 +95,7 @@ namespace Funcular.DomainTools.ClassBuilders
 			    this._classNameNewNameMappings[className] = newClassName;
 					className = newClassName;
 			}
-		    WriteClassAttributes(classAttributes, tableName);
+		    WriteClassAttributes(classAttributes, tableName, applyDataAnnotationAttributes);
 			WriteLine(
 				"public partial class {0} {1}",
 				className,
@@ -104,9 +104,9 @@ namespace Funcular.DomainTools.ClassBuilders
 			return this;
 		}
 
-	    private void WriteClassAttributes(string entityAttributes, string tableName)
+	    private void WriteClassAttributes(string entityAttributes, string tableName, bool applyDataAnnotationAttributes = true)
 	    {
-            if (_options.AddDataAnnotationAttributes)
+            if (_options.AddDataAnnotationAttributes == true && applyDataAnnotationAttributes == true)
             {
                 WriteLine($"[Table(\"{tableName}\")]");
             }
@@ -115,8 +115,7 @@ namespace Funcular.DomainTools.ClassBuilders
 	        var originalIndentLevel = _indentLevel;
 	        _indentLevel = 1;
 	        var entityAttributeList = entityAttributes.Split(new[] {';', '|', '[', ']'}, StringSplitOptions.RemoveEmptyEntries).ToArray();
-	        WriteLine();
-	        foreach (var entityAttribute in entityAttributeList)
+            foreach (var entityAttribute in entityAttributeList)
 	        {
 	            WriteLine($"[{entityAttribute}]");
 	        }
@@ -150,10 +149,9 @@ namespace Funcular.DomainTools.ClassBuilders
 			_includeNamespaces = _includeNamespaces.OrderBy(x => x).ToList();
             foreach (string item in _includeNamespaces.Distinct())
 			{
-				WriteLine("using {0};", item);
+				WriteLine($"using {item};");
 			}
-		    WriteLine();
-			return this;
+            return this;
 		}
 
 		public EntityBuilder WriteLine(string s, params object[] args)

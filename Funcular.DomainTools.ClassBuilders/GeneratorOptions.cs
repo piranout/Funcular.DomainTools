@@ -26,12 +26,15 @@ namespace Funcular.DomainTools.ClassBuilders
 
 		public string BaseNamespace { get; set; }
 		public string EntityNamespace { get; set; }
+		public string BusinessObjectsNamespace { get; set; }
 		public string EntitiesInherit { get; set; }
 		public string EntitiesImplementInterfaces { get; set; }
         public string Usings { get; set; }
         public bool GenerateInheritingBusinessObjects { get; set; }
         public bool RemoveDboFromOutputFolderPath { get; set; }
         public string EntitySuffix { get; set; }
+        public string EntitySubdirectory { get; set; }
+        public string BusinessObjectsSubdirectory { get; set; }
 
         public string DataProviderNamespace { get; set; }
 

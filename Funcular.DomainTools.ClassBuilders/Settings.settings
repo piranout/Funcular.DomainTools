@@ -1,0 +1,99 @@
+﻿<?xml version='10' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemasmicrosoftcom/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FuncularDomainToolsClassBuilders" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="OutputDirectory" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">c:\temp</Value>
+    </Setting>
+    <Setting Name="EntityNamespace" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">Entities</Value>
+    </Setting>
+    <Setting Name="DataProviderNamespace" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">Providers</Value>
+    </Setting>
+    <Setting Name="AppendDbSchemaToNamepaces" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EntitiesInherit" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EntitiesImplementInterfaces" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SqlTextCommand" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="GenerateFluentEFMappings" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="GenerateCrmSpecificProperties" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ImplementIdGenerator" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="GeneratedIdDataType" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="IdGenerationFunc" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="SavedConnectionStrings" Type="SystemCollectionsSpecializedStringCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AdditionalCollapseTokens" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">new;_</Value>
+    </Setting>
+    <Setting Name="UseAutomaticProperties" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AdditionalTokenFind" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">Base</Value>
+    </Setting>
+    <Setting Name="AdditionalTokenReplace" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">ExtensionBase</Value>
+    </Setting>
+    <Setting Name="PrimaryKeyGetsNamedId" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Usings" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EntityAttributes" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="MappingAttributes" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="SqlConnectionString" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BaseNamespace" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">CompanySolution</Value>
+    </Setting>
+    <Setting Name="ProjectFile" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AddColumnNameAttributes" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="GenerateInheritingBusinessObjects" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="RemoveDboFromOutputFolderPath" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="EntitySuffix" Type="SystemString" Scope="User">
+      <Value Profile="(Default)">Entity</Value>
+    </Setting>
+    <Setting Name="EntitiesSubDirectory" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="BusinessObjectsSubDirectory" Type="SystemString" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AddDataAnnotationAttributes" Type="SystemBoolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

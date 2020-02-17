@@ -59,7 +59,7 @@ namespace Funcular.DomainTools.ClassBuilders
 
             
             // Create partial entity class if it doesn't exist:
-            CreatePartialEntityFile(entityFilePath, entityFileText);
+            CreateEntityClassPartialFile(entityFilePath, entityFileText);
             if (_options.GenerateFluentEFMappings)
             {
                 _builder.Clear();
@@ -111,66 +111,7 @@ namespace Funcular.DomainTools.ClassBuilders
             _builder.Clear();
         }
 
-        private static void CreatePartialEntityFile(string entityFilePath, string entityFileText)
-        {
-            var partialEntityFilePath = entityFilePath.Replace(".cs", ".partial.cs");
-            if (!File.Exists(partialEntityFilePath))
-            {
-                var sb = new StringBuilder();
-                var sr = new StringReader(entityFileText);
-                string line;
-                do
-                {
-                    line = sr.ReadLine();
-                    // don't duplicate class attributes:
-                    if(line?.Trim().StartsWith("[") == false)
-                        sb.AppendLine(line);
-                } while (line?.Contains("public partial class") == false);
-
-                // get the class open curly brace
-                sb.AppendLine(line = sr.ReadLine());
-                // flip it to close the class
-                sb.AppendLine(line?.Replace("{", "}"));
-                // then close the namespace
-                sb.AppendLine("}");
-
-
-                var partialEntityFileText = sb;
-                using (var outfile = new StreamWriter(partialEntityFilePath))
-                {
-                    outfile.Write(value: partialEntityFileText);
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Gets the BusinessObjects output directory and ensures it exists
-        /// </summary>
-        /// <param name="classConfiguration"></param>
-        /// <returns></returns>
-        private string GetBusinessObjectsOutputDirectory(ClassConfiguration classConfiguration = null)
-        {
-            var businessObjectsOutputDirectory = Path.Combine(_options.OutputDirectory, _options.BusinessObjectsSubdirectory).EnsureEndsWith("\\");
-            if (!Directory.Exists(businessObjectsOutputDirectory))
-                Directory.CreateDirectory(businessObjectsOutputDirectory);
-            return businessObjectsOutputDirectory;
-        }
-
-        /// <summary>
-        /// Gets the Entity output directory and ensures it exists
-        /// </summary>
-        /// <param name="classConfiguration"></param>
-        /// <returns></returns>
-        private string GetEntityOutputDirectory(ClassConfiguration classConfiguration = null)
-        {
-            var entityOutputDirectory = Path.Combine(_options.OutputDirectory, _options.EntitySubdirectory).EnsureEndsWith("\\");
-            if (!Directory.Exists(entityOutputDirectory))
-                Directory.CreateDirectory(entityOutputDirectory);
-            return entityOutputDirectory;
-        }
-
-        public static string RemoveInvalidPathCharacters(string s)
+        public string RemoveInvalidPathCharacters(string s)
         {
             var invalidCharacters = Path.GetInvalidPathChars();
             return s.RemoveAll(invalidCharacters);
@@ -205,7 +146,7 @@ namespace Funcular.DomainTools.ClassBuilders
             string entityNamespace = this._options.EntityNamespace.StripRight(".");
             if (!string.IsNullOrWhiteSpace(innerNamespace))
                 entityNamespace += "." + innerNamespace;
-            string className = GetClassName(fullyQualifiedProcedureName); //string className = StringHelpers.RightOfLast(procedureName, ".");
+            string className = GetEntityClassNameFromTableName(fullyQualifiedProcedureName); //string className = StringHelpers.RightOfLast(procedureName, ".");
             string suffix = StringHelpers.RightOfLast(procedureName, "By");
             if (!string.IsNullOrEmpty(suffix))
                 suffix = "By" + suffix;
@@ -239,7 +180,7 @@ namespace Funcular.DomainTools.ClassBuilders
             return className;
         }
 
-        private void AddDataAnnotationAttributes(SchemaColumnInfo col)
+        protected void AddDataAnnotationAttributes(SchemaColumnInfo col)
         {
             if (_options.AddDataAnnotationAttributes)
             {
@@ -274,7 +215,7 @@ namespace Funcular.DomainTools.ClassBuilders
             var entityNamespace = string.Join(".", namespaces
                 .FindAll(s => !string.IsNullOrEmpty(s))
                 .ToArray());
-            string className = GetClassName(tableOrViewName);
+            string className = GetEntityClassNameFromTableName(tableOrViewName);
 
             _builder.WriteUsingNamespaces()
                 .WriteLine()
@@ -317,7 +258,7 @@ namespace Funcular.DomainTools.ClassBuilders
                 foundPk = true;
             }
             
-            string className = GetClassName(fullyQualifiedTableName);
+            string className = GetEntityClassNameFromTableName(fullyQualifiedTableName);
             string unqualifiedTableName = StringHelpers.RightOfLast(tableName, ".");
             var config = new ClassConfiguration(schemaColumns)
             {
@@ -383,7 +324,7 @@ namespace Funcular.DomainTools.ClassBuilders
             return config;
         }
 
-        public string GetBusinessObjectNamespace()
+        protected string GetBusinessObjectNamespace()
         {
             // TODO add inner namespaces:
             var suffix = _options.BusinessObjectsNamespace.HasValue()
@@ -392,7 +333,19 @@ namespace Funcular.DomainTools.ClassBuilders
             return string.Join(".", _options.BaseNamespace, suffix);
         }
 
-        public string GetEntityNamespace()
+        protected string GetBusinessObjectClassName(ClassConfiguration classConfiguration, string className)
+        {
+            if (_options.EntitySuffix.HasValue() &&
+                className.EndsWith(_options.EntitySuffix, StringComparison.OrdinalIgnoreCase))
+            {
+                return className
+                    .LeftOfLast(_options.EntitySuffix);
+            }
+
+            return className;
+        }
+
+        protected string GetEntityNamespace()
         {
             // TODO add inner namespaces:
             var suffix = _options.EntityNamespace.HasValue()
@@ -401,7 +354,80 @@ namespace Funcular.DomainTools.ClassBuilders
             return string.Join(".", _options.BaseNamespace, suffix);
         }
 
-        public void WriteEntityFrameworkMappingConfiguration(ClassConfiguration classConfiguration)
+        protected string GetEntityClassNameFromTableName(string fullyQualifiedTableName)
+        {
+            string tableName = fullyQualifiedTableName.RemoveAll(new[] { '[', ']' });
+            string className;
+            className = tableName.RightOfLast(".");
+            className = className.Collapse(PascalCase, false, "_");
+            className = className.Singularize(inputIsKnownToBePlural: false);
+            if (_options.EntitySuffix.HasValue())
+            {
+                className = $"{className}{_options.EntitySuffix}";
+            }
+            return className;
+        }
+
+        protected void CreateEntityClassPartialFile(string entityFilePath, string entityFileText)
+        {
+            var partialEntityFilePath = entityFilePath.Replace(".cs", ".partial.cs");
+            if (!File.Exists(partialEntityFilePath))
+            {
+                var sb = new StringBuilder();
+                var sr = new StringReader(entityFileText);
+                string line;
+                do
+                {
+                    line = sr.ReadLine();
+                    // don't duplicate class attributes:
+                    if(line?.Trim().StartsWith("[") == false)
+                        sb.AppendLine(line);
+                } while (line?.Contains("public partial class") == false);
+
+                // get the class open curly brace
+                sb.AppendLine(line = sr.ReadLine());
+                // flip it to close the class
+                sb.AppendLine(line?.Replace("{", "}"));
+                // then close the namespace
+                sb.AppendLine("}");
+
+
+                var partialEntityFileText = sb;
+                using (var outfile = new StreamWriter(partialEntityFilePath))
+                {
+                    outfile.Write(value: partialEntityFileText);
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the BusinessObjects output directory and ensures it exists
+        /// </summary>
+        /// <param name="classConfiguration"></param>
+        /// <returns></returns>
+        protected string GetBusinessObjectsOutputDirectory(ClassConfiguration classConfiguration = null)
+        {
+            var businessObjectsOutputDirectory = Path.Combine(_options.OutputDirectory, _options.BusinessObjectsSubdirectory).EnsureEndsWith("\\");
+            if (!Directory.Exists(businessObjectsOutputDirectory))
+                Directory.CreateDirectory(businessObjectsOutputDirectory);
+            return businessObjectsOutputDirectory;
+        }
+
+        /// <summary>
+        /// Gets the Entity output directory and ensures it exists
+        /// </summary>
+        /// <param name="classConfiguration"></param>
+        /// <returns></returns>
+        protected string GetEntityOutputDirectory(ClassConfiguration classConfiguration = null)
+        {
+            var entityOutputDirectory = Path.Combine(_options.OutputDirectory, _options.EntitySubdirectory).EnsureEndsWith("\\");
+            if (!Directory.Exists(entityOutputDirectory))
+                Directory.CreateDirectory(entityOutputDirectory);
+            return entityOutputDirectory;
+        }
+
+        protected void WriteEntityFrameworkMappingConfiguration(ClassConfiguration classConfiguration)
         {
             var newClassName = BeginMappingConfigurationClass(classConfiguration);
             _builder.WriteLine("public " + newClassName + "Mapping()")
@@ -446,23 +472,18 @@ namespace Funcular.DomainTools.ClassBuilders
             CloseEntityConfigurationClass();
         }
 
-        public void WriteEntityFrameworkMappingPartialClass(ClassConfiguration configuration)
+        protected void WriteEntityFrameworkMappingPartialClass(ClassConfiguration configuration)
         {
             var newClassName = BeginMappingConfigurationClass(configuration, true);
-            _builder.WriteLine("protected void initialize()");
-            _builder.WriteLine("{");
-            _builder.WriteLine("// ADD RELATIONSHIPS AND CUSTOM LOGIC HERE");
-            _builder.WriteLine("}");
+            _builder
+                .WriteLine("protected void initialize()")
+                .WriteLine("{")
+                .WriteLine("// ADD RELATIONSHIPS AND CUSTOM LOGIC HERE")
+                .WriteLine("}");
             CloseEntityConfigurationClass();
         }
 
-        protected void CloseEntityConfigurationClass()
-        {
-            this._builder.WriteLine("}"); //class
-            this._builder.WriteLine("}"); //namespace
-        }
-
-        private string BeginMappingConfigurationClass(ClassConfiguration configuration, bool isPartial = false)
+        protected string BeginMappingConfigurationClass(ClassConfiguration configuration, bool isPartial = false)
         {
             this._builder.Clear();
             string newClassName = this._builder.ClassNameNewNameMappings.ContainsKey(configuration.ClassName)
@@ -490,30 +511,13 @@ namespace Funcular.DomainTools.ClassBuilders
             return newClassName;
         }
 
-        protected string GetBusinessObjectClassName(ClassConfiguration classConfiguration, string className)
+        /// <summary>
+        /// Writes two closing curly brace lines.
+        /// </summary>
+        protected void CloseEntityConfigurationClass()
         {
-            if (_options.EntitySuffix.HasValue() &&
-                className.EndsWith(_options.EntitySuffix, StringComparison.OrdinalIgnoreCase))
-            {
-                return className
-                    .LeftOfLast(_options.EntitySuffix);
-            }
-
-            return className;
-        }
-
-        protected string GetClassName(string fullyQualifiedTableName)
-        {
-            string tableName = fullyQualifiedTableName.RemoveAll(new[] { '[', ']' });
-            string className;
-            className = StringHelpers.RightOfLast(tableName, ".");
-            className = className.Collapse(PascalCase, false, "_");
-            className = className.Singularize(inputIsKnownToBePlural: false);
-            if (_options.EntitySuffix.HasValue())
-            {
-                className = $"{className}{_options.EntitySuffix}";
-            }
-            return className;
+            this._builder.WriteLine("}"); //class
+            this._builder.WriteLine("}"); //namespace
         }
 
         protected List<SchemaColumnInfo> GetTextCommandColumns(string textCommand)

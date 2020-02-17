@@ -194,7 +194,7 @@ namespace Funcular.DomainTools.Utilities
 			originalString.Substring(idx + 1, originalString.Length - (idx + 1)));
 		}
 		/// <summary>
-		/// Remove all occurences of any string in <paramref name="stringsToRemove"/>
+		/// Remove all occurrences of any string in <paramref name="stringsToRemove"/>
 		/// </summary>
 		/// <param name="originalString"></param>
 		/// <param name="stringsToRemove"></param>
@@ -212,7 +212,7 @@ namespace Funcular.DomainTools.Utilities
 		}
 
 		/// <summary>
-		/// Remove all occurences of any char in <paramref name="charsToRemove"/>
+		/// Remove all occurrences of any char in <paramref name="charsToRemove"/>
 		/// </summary>
 		/// <param name="originalString"></param>
 		/// <param name="charsToRemove"></param>

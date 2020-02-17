@@ -172,7 +172,7 @@ namespace Funcular.DomainTools.ClassBuilders
 
         public static string RemoveInvalidPathCharacters(string s)
         {
-            var invalidCharacters = System.IO.Path.GetInvalidPathChars().Select(c => c.ToString()).ToArray();
+            var invalidCharacters = Path.GetInvalidPathChars();
             return s.RemoveAll(invalidCharacters);
 
         }

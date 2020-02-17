@@ -100,6 +100,7 @@ namespace Funcular.DomainTools.ClassBuilders
                 string.Empty, 
                 "Serializable",
                 applyDataAnnotationAttributes: false)
+                .WriteLine("}")
                 .WriteLine("}");
             string businessObjectFileText = this._builder.GetClassString();
             using (var outfile = new StreamWriter(businessObjectFilePath))

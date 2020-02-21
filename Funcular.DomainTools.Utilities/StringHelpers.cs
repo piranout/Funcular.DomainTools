@@ -159,39 +159,70 @@ namespace Funcular.DomainTools.Utilities
 			else
 				return originalString.Substring(0, 1).ToUpper() + originalString.Substring(1);
 		}
-		public static string LeftOfFirst(this string originalString, string ofString)
+
+		/// <summary>
+		/// If <paramref name="other"/> does not occur in <paramref name="value"/>,
+		/// or if either input is null or empty, returns <paramref name="value"/>.
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public static string LeftOfFirst(this string value, string other)
 		{
-			if (string.IsNullOrEmpty(originalString))
-				return originalString;
-			int idx = originalString.IndexOf(ofString, System.StringComparison.Ordinal);
-			return (idx >= 0 ? originalString.Substring(0, idx) : "");
+			if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(other))
+				return value;
+			int idx = value.IndexOf(other, System.StringComparison.Ordinal);
+			return (idx >= 0 ? value.Substring(0, idx) : value);
 		}
-		public static string RightOfLast(this string originalString, string ofString)
+
+		/// <summary>
+        /// If <paramref name="other"/> does not occur in <paramref name="value"/>,
+        /// or if either input is null or empty, returns <paramref name="value"/>.
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public static string RightOfLast(this string value, string other)
 		{
-			if (string.IsNullOrEmpty(originalString))
-				return originalString;
-			int idx = originalString.LastIndexOf(ofString, System.StringComparison.Ordinal);
-			return (idx < 0 ?
-			"" :
-			originalString.Substring(idx + ofString.Length, originalString.Length - (idx + ofString.Length)));
-		}
-        public static string LeftOfLast(this string originalString, string ofString)
-        {
-            if (string.IsNullOrEmpty(originalString))
-                return originalString;
-            int idx = originalString.LastIndexOf(ofString, System.StringComparison.Ordinal);
-            return (idx < 0 ?
-                "" :
-                originalString.Substring(0, idx + 1));
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(other))
+                return value;
+			var idx = value.LastIndexOf(other, System.StringComparison.Ordinal);
+            var ret =
+                idx >= 0
+					? (value.Substring(idx + other.Length, value.Length - (idx + other.Length)))
+                    : value;
+            return ret;
         }
-		public static string RightOfFirst(this string originalString, string ofString)
+
+		/// <summary>
+		/// If <paramref name="other"/> does not occur in <paramref name="value"/>,
+        /// or if either input is null or empty, returns <paramref name="value"/>.
+        /// </summary>
+		/// <param name="value"></param>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public static string LeftOfLast(this string value, string other)
+        {
+            if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(other))
+                return value;
+            int idx = value.LastIndexOf(other, System.StringComparison.Ordinal);
+            return (idx < 0 ? value : value.Substring(0, idx + 1));
+        }
+
+		/// <summary>
+		/// If <paramref name="other"/> does not occur in <paramref name="value"/>,
+        /// or if either input is null or empty, returns <paramref name="value"/>.
+        /// </summary>
+		/// <param name="value"></param>
+		/// <param name="other"></param>
+		/// <returns></returns>
+		public static string RightOfFirst(this string value, string other)
 		{
-			if (string.IsNullOrEmpty(originalString))
-				return originalString;
-			int idx = originalString.IndexOf(ofString, System.StringComparison.Ordinal);
-			return (idx < 0 ?
-			"" :
-			originalString.Substring(idx + 1, originalString.Length - (idx + 1)));
+			if (string.IsNullOrEmpty(value) || string.IsNullOrEmpty(other))
+				return value;
+			int idx = value.IndexOf(other, System.StringComparison.Ordinal);
+            var ret = (idx < 0 ? value : value.Substring(idx + other.Length, value.Length - (idx + other.Length)));
+            return ret;
 		}
 		/// <summary>
 		/// Remove all occurrences of any string in <paramref name="stringsToRemove"/>

@@ -41,8 +41,11 @@ namespace Funcular.DomainTools.ClassBuilders
         public void WriteTableClass(string tableName, ICollection<SchemaColumnInfo> schemaColumns)
         {
             var classConfiguration = BuildClassForTable(tableName, schemaColumns);
-            string entityFilePath = Path.Combine(classConfiguration.EntityOutputDirectory, $"{classConfiguration.ClassName}.cs");
-
+            var entityOutputDirectory = GetEntityOutputDirectory(classConfiguration);
+            string entityFilePath = Path.Combine(
+                entityOutputDirectory, 
+                $"{classConfiguration.ClassName}.cs");
+            
             string entityFileText = this._builder.GetClassString();
             using (var outfile = new StreamWriter(entityFilePath))
             {
@@ -52,12 +55,10 @@ namespace Funcular.DomainTools.ClassBuilders
             // TODO:
             if (_options.GenerateInheritingBusinessObjects)
             {
-                CreateBusinessObjectClass(classConfiguration);
+                CreateBusinessObjectClass(classConfiguration, tableName);
                 // var businessFileText = CreateBusinessObjectClass(classConfiguration);
             }
 
-
-            
             // Create partial entity class if it doesn't exist:
             CreateEntityClassPartialFile(entityFilePath, entityFileText);
             if (_options.GenerateFluentEFMappings)
@@ -84,22 +85,26 @@ namespace Funcular.DomainTools.ClassBuilders
             _builder.Clear();
         }
 
-        public void CreateBusinessObjectClass(ClassConfiguration classConfiguration)
+        public void CreateBusinessObjectClass(ClassConfiguration classConfiguration, string tableName)
         {
-            var businessObjectOutputDirectoryPath = GetBusinessObjectsOutputDirectory();
+            var businessObjectOutputDirectoryPath = GetBusinessObjectsOutputDirectory(classConfiguration);
             var businessObjectNamespace = GetBusinessObjectNamespace();
+            string innerNamespace = GetInnerNamespace(tableName);
+            var fullNamespace = innerNamespace.HasValue() ? $"{businessObjectNamespace}.{innerNamespace}" : businessObjectNamespace;
+
             var businessObjectClassName = classConfiguration.ClassName.StripRight(_options.EntitySuffix);
             var businessObjectFilePath = Path.Combine(businessObjectOutputDirectoryPath, $"{businessObjectClassName}.cs");
             _builder.Clear()
                 .WriteLine($"using {classConfiguration.EntityNamespace};")
                 .WriteUsingNamespaces()
                 .WriteLine()
-                .WriteNamespaceDeclaration(businessObjectNamespace)
-                .WriteClassDeclaration(businessObjectClassName,
-                classConfiguration.InnerNamespace + "." + classConfiguration.ClassName, 
-                string.Empty, 
-                "Serializable",
-                applyDataAnnotationAttributes: false)
+                .WriteNamespaceDeclaration(classNamespace: fullNamespace)
+                .WriteClassDeclaration(
+                    className: businessObjectClassName,
+                    inherits: classConfiguration.InnerNamespace + "." + classConfiguration.ClassName, 
+                    implementsInterfaces: string.Empty, 
+                    classAttributes: "Serializable",
+                    applyDataAnnotationAttributes: false)
                 .WriteLine("}")
                 .WriteLine("}");
             string businessObjectFileText = this._builder.GetClassString();
@@ -107,11 +112,10 @@ namespace Funcular.DomainTools.ClassBuilders
             {
                 outfile.Write(value: businessObjectFileText);
             }
-
             _builder.Clear();
         }
 
-        public string RemoveInvalidPathCharacters(string s)
+        public static string RemoveInvalidPathCharacters(string s)
         {
             var invalidCharacters = Path.GetInvalidPathChars();
             return s.RemoveAll(invalidCharacters);
@@ -180,6 +184,7 @@ namespace Funcular.DomainTools.ClassBuilders
             return className;
         }
 
+
         protected void AddDataAnnotationAttributes(SchemaColumnInfo col)
         {
             if (_options.AddDataAnnotationAttributes)
@@ -187,7 +192,15 @@ namespace Funcular.DomainTools.ClassBuilders
                 _builder.WriteLine($"[Column(\"{col.ColumnName}\")]");
                 if (col.ProviderSpecificDataType == typeof(System.Data.SqlTypes.SqlString))
                 {
+                    if (col.AllowDBNull == false)
+                    {
+                        _builder.WriteLine("[Required(AllowEmptyStrings = false)]");
+                    }
                     _builder.WriteLine($"[MaxLength(\"{col.ColumnSize}\")]");
+                }
+                else if (col.AllowDBNull == false)
+                {
+                    _builder.WriteLine("[Required]");
                 }
             }
         }
@@ -246,20 +259,20 @@ namespace Funcular.DomainTools.ClassBuilders
         {
             _builder.Clear();
             string tableName = fullyQualifiedTableName.RemoveAll(new char[] { '[', ']' });
-            string innerNamespace = StringHelpers.LeftOfFirst(tableName, ".");
             
             var entityNamespace = GetEntityNamespace();
+            string innerNamespace = GetInnerNamespace(tableName: tableName);
+            var fullNamespace = innerNamespace.HasValue() ? $"{entityNamespace}.{innerNamespace}" : entityNamespace;
+            string className = GetEntityClassNameFromTableName(fullyQualifiedTableName);
+            string unqualifiedTableName = StringHelpers.RightOfLast(tableName, ".");
 
             bool foundPk = false;
             SchemaColumnInfo primaryKeyColumn = null;
-
             if ((primaryKeyColumn = (schemaColumns.FirstOrDefault(col => col.IsKey))) != null)
             {
                 foundPk = true;
             }
             
-            string className = GetEntityClassNameFromTableName(fullyQualifiedTableName);
-            string unqualifiedTableName = StringHelpers.RightOfLast(tableName, ".");
             var config = new ClassConfiguration(schemaColumns)
             {
                 ClassName = className,
@@ -273,7 +286,7 @@ namespace Funcular.DomainTools.ClassBuilders
             _builder
                 .WriteUsingNamespaces()
                 .WriteLine()
-                .WriteNamespaceDeclaration(entityNamespace)
+                .WriteNamespaceDeclaration(fullNamespace)
                 .WriteClassDeclaration(
                     className: className, 
                     // TODO: Move class-specific _Options properties onto ClassConfiguration
@@ -310,7 +323,7 @@ namespace Funcular.DomainTools.ClassBuilders
                     }
                 }
 
-                _builder.ColumnNameNewNameMappings[columnName] = newPropertyName;
+                _builder.ColumnNamePropertyNameMappings[columnName] = newPropertyName;
                 AddDataAnnotationAttributes(col: col);
                 _builder.WriteProperty(newPropertyName, propertyType, useNullableType, _options.UseAutomaticProperties);
             }
@@ -324,9 +337,25 @@ namespace Funcular.DomainTools.ClassBuilders
             return config;
         }
 
+        protected string GetInnerNamespace(string tableName)
+        {
+            string stem = "";
+            string temp = "";
+            if (_options.TableNameStemIsInnerNamespace)
+            {
+                temp = tableName.StartsWith("dbo.") ? tableName.RightOfFirst("dbo.") : tableName;
+                stem = 
+                    (temp.Contains(".") ? temp.LeftOfFirst(".") :
+                    temp.Contains("_" /*TODO: Delimiter*/) ? temp.LeftOfFirst("_") : temp)
+                .Collapse(StringHelpers.ChangeCaseTypes.PascalCase,
+                        false,
+                        this._options.AdditionalCollapseTokens?.Split(';')); 
+            }
+            return stem;
+        }
+
         protected string GetBusinessObjectNamespace()
         {
-            // TODO add inner namespaces:
             var suffix = _options.BusinessObjectsNamespace.HasValue()
                 ? _options.BusinessObjectsNamespace
                 : "BusinessObjects";
@@ -347,7 +376,6 @@ namespace Funcular.DomainTools.ClassBuilders
 
         protected string GetEntityNamespace()
         {
-            // TODO add inner namespaces:
             var suffix = _options.EntityNamespace.HasValue()
                 ? _options.EntityNamespace
                 : "Entities";
@@ -408,7 +436,16 @@ namespace Funcular.DomainTools.ClassBuilders
         /// <returns></returns>
         protected string GetBusinessObjectsOutputDirectory(ClassConfiguration classConfiguration = null)
         {
-            var businessObjectsOutputDirectory = Path.Combine(_options.OutputDirectory, _options.BusinessObjectsSubdirectory).EnsureEndsWith("\\");
+            var subDirectory = _options.BusinessObjectsSubdirectory ?? "";
+            if (classConfiguration != null && classConfiguration.InnerNamespace.HasValue())
+            {
+                var innerNamespace = classConfiguration.InnerNamespace
+                    .Collapse(StringHelpers.ChangeCaseTypes.PascalCase,
+                        false,
+                        this._options.AdditionalCollapseTokens?.Split(';'));
+                subDirectory = Path.Combine(subDirectory, innerNamespace);
+            }
+            var businessObjectsOutputDirectory = Path.Combine(_options.OutputDirectory, subDirectory).EnsureEndsWith("\\");
             if (!Directory.Exists(businessObjectsOutputDirectory))
                 Directory.CreateDirectory(businessObjectsOutputDirectory);
             return businessObjectsOutputDirectory;
@@ -421,12 +458,28 @@ namespace Funcular.DomainTools.ClassBuilders
         /// <returns></returns>
         protected string GetEntityOutputDirectory(ClassConfiguration classConfiguration = null)
         {
-            var entityOutputDirectory = Path.Combine(_options.OutputDirectory, _options.EntitySubdirectory).EnsureEndsWith("\\");
+            var subDirectory = _options.EntitySubdirectory ?? "";
+            if (classConfiguration != null && classConfiguration.InnerNamespace.HasValue())
+            {
+                var innerNamespace = classConfiguration.InnerNamespace
+                    .Collapse(StringHelpers.ChangeCaseTypes.PascalCase,
+                        false,
+                        this._options.AdditionalCollapseTokens?.Split(';'));
+                ;
+                subDirectory = Path.Combine(subDirectory, innerNamespace);
+            }
+            var entityOutputDirectory = Path.Combine(_options.OutputDirectory, subDirectory).EnsureEndsWith("\\");
             if (!Directory.Exists(entityOutputDirectory))
                 Directory.CreateDirectory(entityOutputDirectory);
             return entityOutputDirectory;
         }
 
+        /// <summary>
+        /// These mapping configuration methods are obsolete-ish because recent EntityFramework
+        /// versions don't use MappingConfiguration classes anymore. Still, leaving in for
+        /// backwards compatibility. 
+        /// </summary>
+        /// <param name="classConfiguration"></param>
         protected void WriteEntityFrameworkMappingConfiguration(ClassConfiguration classConfiguration)
         {
             var newClassName = BeginMappingConfigurationClass(classConfiguration);
@@ -435,16 +488,16 @@ namespace Funcular.DomainTools.ClassBuilders
             if (classConfiguration.PrimaryKeyColumn != null)
             {
                 _builder.WriteLine("HasKey(item => item.{0});",
-                    _builder.ColumnNameNewNameMappings.ContainsKey(classConfiguration.PrimaryKeyColumn.ColumnName)
-                        ? _builder.ColumnNameNewNameMappings[classConfiguration.PrimaryKeyColumn.ColumnName]
+                    _builder.ColumnNamePropertyNameMappings.ContainsKey(classConfiguration.PrimaryKeyColumn.ColumnName)
+                        ? _builder.ColumnNamePropertyNameMappings[classConfiguration.PrimaryKeyColumn.ColumnName]
                         : classConfiguration.PrimaryKeyColumn.PropertyName);
             }
             foreach (SchemaColumnInfo schemaColumnInfo in classConfiguration.SchemaColumns)
             {
                 // map any columns with different names from the corresponding entity properties:
-                if (_builder.ColumnNameNewNameMappings.ContainsKey(schemaColumnInfo.ColumnName))
+                if (_builder.ColumnNamePropertyNameMappings.ContainsKey(schemaColumnInfo.ColumnName))
                 {
-                    string newPropertyName = _builder.ColumnNameNewNameMappings[schemaColumnInfo.ColumnName];
+                    string newPropertyName = _builder.ColumnNamePropertyNameMappings[schemaColumnInfo.ColumnName];
                     if (newPropertyName != schemaColumnInfo.ColumnName)
                     {
                         _builder.WriteLine(
@@ -472,6 +525,12 @@ namespace Funcular.DomainTools.ClassBuilders
             CloseEntityConfigurationClass();
         }
 
+        /// <summary>
+        /// These mapping configuration methods are obsolete-ish because recent EntityFramework
+        /// versions don't use MappingConfiguration classes anymore. Still, leaving in for
+        /// backwards compatibility. 
+        /// </summary>
+        /// <param name="classConfiguration"></param>
         protected void WriteEntityFrameworkMappingPartialClass(ClassConfiguration configuration)
         {
             var newClassName = BeginMappingConfigurationClass(configuration, true);
@@ -483,6 +542,12 @@ namespace Funcular.DomainTools.ClassBuilders
             CloseEntityConfigurationClass();
         }
 
+        /// <summary>
+        /// These mapping configuration methods are obsolete-ish because recent EntityFramework
+        /// versions don't use MappingConfiguration classes anymore. Still, leaving in for
+        /// backwards compatibility. 
+        /// </summary>
+        /// <param name="classConfiguration"></param>
         protected string BeginMappingConfigurationClass(ClassConfiguration configuration, bool isPartial = false)
         {
             this._builder.Clear();
@@ -513,6 +578,9 @@ namespace Funcular.DomainTools.ClassBuilders
 
         /// <summary>
         /// Writes two closing curly brace lines.
+        /// These mapping configuration methods are obsolete-ish because recent EntityFramework
+        /// versions don't use MappingConfiguration classes anymore. Still, leaving in for
+        /// backwards compatibility. 
         /// </summary>
         protected void CloseEntityConfigurationClass()
         {

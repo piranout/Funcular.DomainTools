@@ -34,67 +34,7 @@ namespace Funcular.DomainTools.Applications.Properties {
                 this["OutputDirectory"] = value;
             }
         }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EntitiesSubdirectory {
-            get {
-                return ((string)(this["EntitiesSubdirectory"]));
-            }
-            set {
-                this["EntitiesSubdirectory"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BusinessObjectsSubdirectory {
-            get {
-                return ((string)(this["BusinessObjectsSubdirectory"]));
-            }
-            set {
-                this["BusinessObjectsSubdirectory"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SqlConnectionString {
-            get {
-                return ((string)(this["SqlConnectionString"]));
-            }
-            set {
-                this["SqlConnectionString"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string Usings {
-            get {
-                return ((string)(this["Usings"]));
-            }
-            set {
-                this["Usings"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Company.Solution")]
-        public string BaseNamespace {
-            get {
-                return ((string)(this["BaseNamespace"]));
-            }
-            set {
-                this["BaseNamespace"] = value;
-            }
-        }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Entities")]
@@ -106,19 +46,31 @@ namespace Funcular.DomainTools.Applications.Properties {
                 this["EntityNamespace"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Entity")]
-        public string EntitySuffix {
+        [global::System.Configuration.DefaultSettingValueAttribute("Providers")]
+        public string DataProviderNamespace {
             get {
-                return ((string)(this["EntitySuffix"]));
+                return ((string)(this["DataProviderNamespace"]));
             }
             set {
-                this["EntitySuffix"] = value;
+                this["DataProviderNamespace"] = value;
             }
         }
-
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AppendDbSchemaToNamepaces {
+            get {
+                return ((bool)(this["AppendDbSchemaToNamepaces"]));
+            }
+            set {
+                this["AppendDbSchemaToNamepaces"] = value;
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -142,79 +94,7 @@ namespace Funcular.DomainTools.Applications.Properties {
                 this["EntitiesImplementInterfaces"] = value;
             }
         }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string EntityAttributes {
-            get {
-                return ((string)(this["EntityAttributes"]));
-            }
-            set {
-                this["EntityAttributes"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool GenerateInheritingBusinessObjects {
-            get {
-                return ((bool)(this["GenerateInheritingBusinessObjects"]));
-            }
-            set {
-                this["GenerateInheritingBusinessObjects"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string BusinessObjectsNamespace {
-            get {
-                return ((string)(this["BusinessObjectsNamespace"]));
-            }
-            set {
-                this["BusinessObjectsNamespace"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool UseAutomaticProperties {
-            get {
-                return ((bool)(this["UseAutomaticProperties"]));
-            }
-            set {
-                this["UseAutomaticProperties"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Providers")]
-        public string DataProviderNamespace {
-            get {
-                return ((string)(this["DataProviderNamespace"]));
-            }
-            set {
-                this["DataProviderNamespace"] = value;
-            }
-        }
-
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool AppendDbSchemaToNamepaces {
-            get {
-                return ((bool)(this["AppendDbSchemaToNamepaces"]));
-            }
-            set {
-                this["AppendDbSchemaToNamepaces"] = value;
-            }
-        }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -309,7 +189,19 @@ namespace Funcular.DomainTools.Applications.Properties {
                 this["AdditionalCollapseTokens"] = value;
             }
         }
-
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseAutomaticProperties {
+            get {
+                return ((bool)(this["UseAutomaticProperties"]));
+            }
+            set {
+                this["UseAutomaticProperties"] = value;
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Base")]
@@ -345,7 +237,31 @@ namespace Funcular.DomainTools.Applications.Properties {
                 this["PrimaryKeyGetsNamedId"] = value;
             }
         }
-
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Usings {
+            get {
+                return ((string)(this["Usings"]));
+            }
+            set {
+                this["Usings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EntityAttributes {
+            get {
+                return ((string)(this["EntityAttributes"]));
+            }
+            set {
+                this["EntityAttributes"] = value;
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -357,7 +273,31 @@ namespace Funcular.DomainTools.Applications.Properties {
                 this["MappingAttributes"] = value;
             }
         }
-
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SqlConnectionString {
+            get {
+                return ((string)(this["SqlConnectionString"]));
+            }
+            set {
+                this["SqlConnectionString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Company.Solution")]
+        public string BaseNamespace {
+            get {
+                return ((string)(this["BaseNamespace"]));
+            }
+            set {
+                this["BaseNamespace"] = value;
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
@@ -381,7 +321,19 @@ namespace Funcular.DomainTools.Applications.Properties {
                 this["AddColumnNameAttributes"] = value;
             }
         }
-
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool GenerateInheritingBusinessObjects {
+            get {
+                return ((bool)(this["GenerateInheritingBusinessObjects"]));
+            }
+            set {
+                this["GenerateInheritingBusinessObjects"] = value;
+            }
+        }
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
@@ -391,6 +343,90 @@ namespace Funcular.DomainTools.Applications.Properties {
             }
             set {
                 this["RemoveDboFromOutputFolderPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Entity")]
+        public string EntitySuffix {
+            get {
+                return ((string)(this["EntitySuffix"]));
+            }
+            set {
+                this["EntitySuffix"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EntitiesSubdirectory {
+            get {
+                return ((string)(this["EntitiesSubdirectory"]));
+            }
+            set {
+                this["EntitiesSubdirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BusinessObjectsSubdirectory {
+            get {
+                return ((string)(this["BusinessObjectsSubdirectory"]));
+            }
+            set {
+                this["BusinessObjectsSubdirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string BusinessObjectsNamespace {
+            get {
+                return ((string)(this["BusinessObjectsNamespace"]));
+            }
+            set {
+                this["BusinessObjectsNamespace"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AddDataAnnotationAttributes {
+            get {
+                return ((bool)(this["AddDataAnnotationAttributes"]));
+            }
+            set {
+                this["AddDataAnnotationAttributes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool TableNameStemIsInnerNamespace {
+            get {
+                return ((bool)(this["TableNameStemIsInnerNamespace"]));
+            }
+            set {
+                this["TableNameStemIsInnerNamespace"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EntitySubdirectory {
+            get {
+                return ((string)(this["EntitySubdirectory"]));
+            }
+            set {
+                this["EntitySubdirectory"] = value;
             }
         }
     }

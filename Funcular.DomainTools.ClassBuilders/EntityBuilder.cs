@@ -15,7 +15,7 @@ namespace Funcular.DomainTools.ClassBuilders
 	public class EntityBuilder
 	{
 		protected IList<string> _includeNamespaces;
-		private readonly IDictionary<string, string> _columnNameNewNameMappings = new Dictionary<string, string>();
+		private readonly IDictionary<string, string> _columnNamePropertyNameMappings = new Dictionary<string, string>();
 		private readonly IDictionary<string, string> _classNameNewNameMappings = new Dictionary<string, string>();
         protected GeneratorOptions _options;
         //private string _inherits = " : BaseEntity";
@@ -29,11 +29,27 @@ namespace Funcular.DomainTools.ClassBuilders
 					"System.Collections.Generic"
 				};
             if(options.Usings.HasValue())
-            _includeNamespaces.AddRange(options.Usings.Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries)
+                _includeNamespaces.AddRange(options.Usings.Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.Trim()));
 		}
 
-		#region StringBuilder Helper Methods
+        public IList<string> IncludeNamespaces
+        {
+            get { return _includeNamespaces; }
+            set { _includeNamespaces = value; }
+        }
+
+        public IDictionary<string, string> ColumnNamePropertyNameMappings
+        {
+            get { return this._columnNamePropertyNameMappings; }
+        }
+
+        public IDictionary<string, string> ClassNameNewNameMappings
+        {
+            get { return this._classNameNewNameMappings; }
+        }
+
+        #region StringBuilder Helper Methods
 
 		protected int _indentLevel = 0;
 		private readonly StringBuilder _sb = new StringBuilder();
@@ -54,7 +70,7 @@ namespace Funcular.DomainTools.ClassBuilders
 			if (_options.GenerateCrmSpecificProperties && _options.GenerateFluentEFMappings)
 			{
 			    var newPropertyname = propertyName.Collapse(StringHelpers.ChangeCaseTypes.PascalCase, false, _options.AdditionalCollapseTokens.Split(';'));
-				this._columnNameNewNameMappings[propertyName] = newPropertyname;
+				this._columnNamePropertyNameMappings[propertyName] = newPropertyname;
 				propertyName = newPropertyname;
 			}
 			if (!useAutomaticProperty)
@@ -142,12 +158,22 @@ namespace Funcular.DomainTools.ClassBuilders
 		public EntityBuilder WriteUsingNamespaces()
 		{
 			_indentLevel = 0;
-            if (_options.AddDataAnnotationAttributes && !_includeNamespaces.Contains("System.ComponentModel.DataAnnotations.Schema", StringComparer.OrdinalIgnoreCase))
+            if (_options.AddDataAnnotationAttributes)
             {
-				_includeNamespaces.Add("System.ComponentModel.DataAnnotations.Schema");
-            }
-			_includeNamespaces = _includeNamespaces.OrderBy(x => x).ToList();
-            foreach (string item in _includeNamespaces.Distinct())
+                if(!_includeNamespaces.Contains("System.ComponentModel.DataAnnotations", StringComparer.OrdinalIgnoreCase))
+                {
+                    _includeNamespaces.Add("System.ComponentModel.DataAnnotations");
+                }
+                if (!_includeNamespaces.Contains("System.ComponentModel.DataAnnotations.Schema", StringComparer.OrdinalIgnoreCase))
+                {
+                    _includeNamespaces.Add("System.ComponentModel.DataAnnotations.Schema");
+                }
+			}
+			_includeNamespaces = _includeNamespaces
+                .Distinct()
+                .OrderBy(x => x)
+                .ToArray();
+            foreach (string item in _includeNamespaces)
 			{
 				WriteLine($"using {item};");
 			}
@@ -198,21 +224,5 @@ namespace Funcular.DomainTools.ClassBuilders
 		}
 
 		#endregion
-
-		public IList<string> IncludeNamespaces
-		{
-			get { return _includeNamespaces; }
-			set { _includeNamespaces = value; }
-		}
-
-		public IDictionary<string, string> ColumnNameNewNameMappings
-		{
-			get { return this._columnNameNewNameMappings; }
-		}
-
-		public IDictionary<string, string> ClassNameNewNameMappings
-		{
-			get { return this._classNameNewNameMappings; }
-		}
-	}
+    }
 }

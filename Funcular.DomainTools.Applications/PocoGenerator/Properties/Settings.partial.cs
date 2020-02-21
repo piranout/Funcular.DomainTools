@@ -5,17 +5,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Funcular.DomainTools.ClassBuilders;
+using Funcular.DomainTools.ClassBuilders.SqlMetaData;
 
 #endregion
 
 namespace Funcular.DomainTools.Applications.Properties
 {
-    internal sealed partial class Settings
+    internal sealed partial class Settings : IGeneratorOptions
 	{
 	    public Settings()
-	    {
-	        
-	    }
+        {
+        }
 
 	    public string this[int index]
 	    {
@@ -91,5 +91,8 @@ namespace Funcular.DomainTools.Applications.Properties
 			}
 			return _typeProperties[t] ?? new List<PropertyInfo>();
 		}
-	}
+
+
+        public IEnumerable<SchemaColumnInfo> ColumnInfos { get; set; }
+    }
 }

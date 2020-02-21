@@ -33,6 +33,7 @@ namespace Funcular.DomainTools.ClassBuilders
         public bool GenerateInheritingBusinessObjects { get; set; }
         public bool RemoveDboFromOutputFolderPath { get; set; }
         public string EntitySuffix { get; set; }
+        public bool TableNameStemIsInnerNamespace { get; set; }
         public string EntitySubdirectory { get; set; }
         public string BusinessObjectsSubdirectory { get; set; }
 
